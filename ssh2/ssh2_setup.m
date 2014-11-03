@@ -128,12 +128,13 @@ else
     %ganymed_java_library_http = sprintf('http://ganymed-ssh-2.googlecode.com/files/%s',ganymed_java_library_zip);
 end
 
+SSH2path = fileparts(mfilename('fullpath'));
 
 ganymed_java_library_jar = [ganymed_java_library '.jar'];
-ganymed_java_library_jar_path = [ganymed_java_library ...
-                                    filesep() ganymed_java_library_jar];
+ganymed_java_library_jar_path = fullfile(SSH2path, ganymed_java_library_jar);
 error_message = 0;
 if nargin == 0 %SETUP THE DEFAULT CONFIG
+    ssh2_struct.SSH2path = SSH2path;
     ssh2_struct.ganymed_java_library = ganymed_java_library;
     ssh2_struct.ganymed_java_library_zip = ganymed_java_library_zip;
     ssh2_struct.ganymed_java_library_jar = ganymed_java_library_jar;
