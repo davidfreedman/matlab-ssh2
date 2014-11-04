@@ -113,14 +113,14 @@ USE_CUSTOM_GANYMED_LIB = 0;
 
 if (USE_CUSTOM_GANYMED_LIB > 0)
     ganymed_java_library = 'ganymed-ssh2-m1'; %included custom ganymed library
-     ganymed_java_library_zip = [ganymed_java_library '.zip'];
+%      ganymed_java_library_zip = [ganymed_java_library '.zip'];
     ganymed_java_library_http = '';
 else
     % PICK EITHER CLEONDRIS or GOOGLECODE, NOT BOTH
     % FROM CLEONDRIS
     ganymed_java_library = 'ganymed-ssh2-build250'; % official download from cleondris.ch
-    ganymed_java_library_zip = [ganymed_java_library '.zip'];
-    ganymed_java_library_http = sprintf('http://www.cleondris.ch/ssh2/%s',ganymed_java_library_zip);
+%     ganymed_java_library_zip = [ganymed_java_library '.zip'];
+%     ganymed_java_library_http = sprintf('http://www.cleondris.ch/ssh2/%s',ganymed_java_library_zip);
     
     % FROM GOOGLECODE
     %ganymed_java_library = 'ganymed-ssh2-build251beta1'; % official download from cleondris.ch
@@ -128,14 +128,14 @@ else
     %ganymed_java_library_http = sprintf('http://ganymed-ssh-2.googlecode.com/files/%s',ganymed_java_library_zip);
 end
 
-
+SSH2path = fileparts(mfilename('fullpath'));
 ganymed_java_library_jar = [ganymed_java_library '.jar'];
-ganymed_java_library_jar_path = [ganymed_java_library ...
-                                    filesep() ganymed_java_library_jar];
+ganymed_java_library_jar_path = fullfile(SSH2path, ganymed_java_library_jar);
 error_message = 0;
 if nargin == 0 %SETUP THE DEFAULT CONFIG
+    ssh2_struct.SSH2path = SSH2path;
     ssh2_struct.ganymed_java_library = ganymed_java_library;
-    ssh2_struct.ganymed_java_library_zip = ganymed_java_library_zip;
+%     ssh2_struct.ganymed_java_library_zip = ganymed_java_library_zip;
     ssh2_struct.ganymed_java_library_jar = ganymed_java_library_jar;
     ssh2_struct.ganymed_java_library_jar_path = ganymed_java_library_jar_path;
     
@@ -175,8 +175,9 @@ if nargin == 0 %SETUP THE DEFAULT CONFIG
 else
     error_message = 1;
     if (isstruct(ssh2_struct))
-        if (isfield(ssh2_struct,'ganymed_java_library') && ...
-            isfield(ssh2_struct,'ganymed_java_library_zip') && ...
+        if (isfield(ssh2_struct,'SSH2path') && ...
+            isfield(ssh2_struct,'ganymed_java_library') && ...
+...%             isfield(ssh2_struct,'ganymed_java_library_zip') && ...
             isfield(ssh2_struct,'ganymed_java_library_jar') && ...
             isfield(ssh2_struct,'ganymed_java_library_jar_path') && ...
             isfield(ssh2_struct,'hostname') && ...
@@ -226,19 +227,19 @@ if (error_message == 0 && ~ssh2_struct.ssh2_java_library_loaded)
             fprintf('\nJust added Ganymed-ssh2 to Matlab''s dynamic java Classpath.\n');
         else
             if (USE_CUSTOM_GANYMED_LIB == 0) %try to download official (non-custom) version 
-                if (exist(ganymed_java_library_zip))
-                    % FILE IS INCLUDED NOW BECAUSE IT IS NO LONGER AVAILABE FROM www.cleondris.ch 
-                else
-                    fprintf('Downloading %s\nFrom %s\n',ganymed_java_library_zip,ganymed_java_library_http);
-                    urlwrite(ganymed_java_library_http, ganymed_java_library_zip);
-                end
-                fprintf('Unzipping %s\n',ganymed_java_library_zip);
-                unzip(ganymed_java_library_zip);
-                if (exist(ganymed_java_library_jar_path,'file'))
+%                 if (exist(ganymed_java_library_zip))
+%                     % FILE IS INCLUDED NOW BECAUSE IT IS NO LONGER AVAILABE FROM www.cleondris.ch 
+%                 else
+%                     fprintf('Downloading %s\nFrom %s\n',ganymed_java_library_zip,ganymed_java_library_http);
+%                     urlwrite(ganymed_java_library_http, ganymed_java_library_zip);
+%                 end
+%                 fprintf('Unzipping %s\n',ganymed_java_library_zip);
+%                 unzip(ganymed_java_library_zip);
+%                 if (exist(ganymed_java_library_jar_path,'file'))
                     fprintf('Adding Ganymed-ssh2 to the java path by running\njavaaddpath(''%s'')\n',ganymed_java_library_jar_path);
                     javaaddpath(ganymed_java_library_jar_path);
                     fprintf('\nJust added Ganymed-ssh2 to Matlab''s dynamic java Classpath.\n');
-                end
+%                 end
             else
                 fprintf('A custom ganymed-ssh2 (%s) library should be used and wasn''t, it should be included with the ssh2 matlab files.\n',ganymed_java_library);
                 fprintf('Otherwise, change the variable USE_CUSTOM_GANYMED_LIB to zero to automatically download the offical ganymed-ssh2 version');
