@@ -57,6 +57,8 @@ function ssh2_struct = ssh2_setup(ssh2_struct)
 %   .command_session  - session object for the ssh2 command line 
 %   .command_ignore_response  - set to 1 to ignore response from host
 %   .command_result  - cell array containing the response from the host
+%   .command_ignore_stderr - set to 0 to ignore stderr from host
+%   .command_err - cell array containing the stderr messages from the host.
 %
 %   GANYMED JAVA OBJECT
 %   .connection  - java connection object
@@ -157,6 +159,9 @@ if nargin == 0 %SETUP THE DEFAULT CONFIG
     ssh2_struct.command_session = [];
     ssh2_struct.command_ignore_response = 0;
     ssh2_struct.command_result = [];
+    ssh2_struct.command_ignore_stderr = 1;
+    ssh2_struct.command_err = [];
+    
     
     ssh2_struct.sftp = 0;
     ssh2_struct.scp = 0;
