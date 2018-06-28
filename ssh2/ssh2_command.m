@@ -1,7 +1,7 @@
-function [ssh2_struct, command_result] = ssh2_command(ssh2_struct, command, enableprint)
+function [ssh2_struct, command_result,command_err] = ssh2_command(ssh2_struct, command, enableprint)
 % SSH2_COMMAND   Reuses a SSH2 connection and issues the specified command
 %
-%   [SSH2_CONN, [COMMAND_RESULT]] = SSH2_COMMAND(SSH2_CONN,COMMAND,[ENABLEPRINTTOSCREEN])
+%   [SSH2_CONN, [COMMAND_RESULT],[COMMAND_ERR]] = SSH2_COMMAND(SSH2_CONN,COMMAND,[ENABLEPRINTTOSCREEN])
 %   Connects to the SSH2 host with a configured SSH2_CONN. Once connected 
 %   the COMMAND is issues. The output from the remote host is returned.
 %   The connection to the remote host is still open the function completes.
@@ -13,7 +13,7 @@ function [ssh2_struct, command_result] = ssh2_command(ssh2_struct, command, enab
 %
 % 
 %   SSH2_COMMAND returns the SSH2_CONN for future use and the 
-%   cell array containing the host response.
+%   cell array containing the host response and the host error messages.
 %
 %see also ssh2, ssh2_config, ssh2_config_publickey, ssh2_simple_command
 %
@@ -39,7 +39,11 @@ end
 
 if nargout > 1
     command_result = ssh2_struct.command_result;
+    if nargout >2 
+        command_err =ssh2_struct.command_err;
+    end
 end
+
 if nargout == 0
     clear ssh2_struct;
 end
